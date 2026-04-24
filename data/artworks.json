@@ -1,0 +1,265 @@
+{
+  "artists": [
+    {
+      "id": "a1",
+      "name": "Marta Krūmiņa",
+      "nationality": "Latvian",
+      "bio": "Marta Krūmiņa is a Riga-based painter whose work explores the tension between urban life and natural memory. Her layered canvases merge oil and sand to create textured surfaces that shift under different light conditions."
+    },
+    {
+      "id": "a2",
+      "name": "Jānis Ozols",
+      "nationality": "Latvian",
+      "bio": "Jānis Ozols is a sculptor and installation artist working primarily in bronze and reclaimed wood. His work questions permanence and decay, inviting viewers to consider the lifecycle of objects."
+    },
+    {
+      "id": "a3",
+      "name": "Elena Vasiljeva",
+      "nationality": "Latvian-Russian",
+      "bio": "Elena Vasiljeva's photographic practice documents post-Soviet transitional spaces — liminal zones between the industrial past and an uncertain present. She works in large-format analog photography."
+    },
+    {
+      "id": "a4",
+      "name": "Toms Bergs",
+      "nationality": "Latvian",
+      "bio": "Toms Bergs creates intricate drawings with graphite and ink. His obsessive mark-making reveals hidden patterns in everyday architecture and landscape, blurring the line between map and memory."
+    },
+    {
+      "id": "a5",
+      "name": "Agnese Liepiņa",
+      "nationality": "Latvian",
+      "bio": "Agnese Liepiņa works in mixed media, combining textile, found objects, and paint. Her practice is rooted in feminist discourse and the politics of domesticity."
+    },
+    {
+      "id": "a6",
+      "name": "Rihards Vītols",
+      "nationality": "Latvian",
+      "bio": "Rihards Vītols is a figurative painter whose portraits blur realism and distortion. He is interested in vulnerability and the theatrical nature of everyday gestures."
+    }
+  ],
+  "artworks": [
+    {
+      "id": "aw1",
+      "title": "Baltic Amber",
+      "artist_id": "a1",
+      "year": 2025,
+      "size": "80 × 80 cm",
+      "technique": "Oil and sand on canvas",
+      "price": 2400,
+      "category": "painting",
+      "description": "A meditation on the amber coastline, this work layers warm ochre and deep umber to evoke the geological memory embedded in Latvia's most iconic material. The sand mixed into the paint creates a tactile surface that rewards close inspection.",
+      "image_url": "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&q=80"
+    },
+    {
+      "id": "aw2",
+      "title": "Forest Sentinel",
+      "artist_id": "a2",
+      "year": 2024,
+      "size": "45 × 22 × 18 cm",
+      "technique": "Bronze",
+      "price": 5800,
+      "category": "sculpture",
+      "is_sculpture": true,
+      "model_type": "totem",
+      "model_color": "#ff6b35",
+      "description": "A solitary bronze figure stands at the threshold of a carved wooden base, suggesting the ancient guardianship found in Latvian forest mythology. Each casting is unique — minor surface variations reveal the hand of the maker.",
+      "image_url": "https://images.unsplash.com/photo-1618447013373-73f09e04b97d?w=600&q=80"
+    },
+    {
+      "id": "aw3",
+      "title": "Ķīpsala, November",
+      "artist_id": "a3",
+      "year": 2023,
+      "size": "90 × 120 cm",
+      "technique": "Analog C-print, edition 1/5",
+      "price": 1800,
+      "category": "photography",
+      "description": "Shot on a large-format film camera at dawn, this image captures the fog-wrapped industrial peninsula of Ķīpsala. The analog process introduces a grain and warmth that digital photography cannot replicate.",
+      "image_url": "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600&q=80"
+    },
+    {
+      "id": "aw4",
+      "title": "Grid Study No. 7",
+      "artist_id": "a4",
+      "year": 2026,
+      "size": "50 × 50 cm",
+      "technique": "Graphite on paper",
+      "price": 950,
+      "category": "drawing",
+      "description": "Part of an ongoing series mapping the overlooked geometry of Old Riga's rooftops. Thousands of individual marks accumulate into a dense architectural portrait that reveals new details with each viewing.",
+      "image_url": "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&q=80"
+    },
+    {
+      "id": "aw5",
+      "title": "Domestic Archaeology",
+      "artist_id": "a5",
+      "year": 2025,
+      "size": "60 × 80 cm",
+      "technique": "Textile, found objects, acrylic on linen",
+      "price": 3200,
+      "category": "mixed_media",
+      "description": "Embedded in the surface are fragments of inherited tablecloths, buttons, and handwritten notes — a literal archaeology of the domestic sphere. The work asks whose labor is remembered and whose is forgotten.",
+      "image_url": "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=600&q=80"
+    },
+    {
+      "id": "aw6",
+      "title": "Self at the Window",
+      "artist_id": "a6",
+      "year": 2026,
+      "size": "70 × 90 cm",
+      "technique": "Oil on canvas",
+      "price": 4100,
+      "category": "painting",
+      "description": "A semi-abstract self-portrait in which the figure dissolves into the window light behind it. The boundary between the interior and exterior world becomes ambiguous — as does the identity of the subject.",
+      "image_url": "https://images.unsplash.com/photo-1536924940846-227afb31e2a5?w=600&q=80"
+    },
+    {
+      "id": "aw7",
+      "title": "Daugava Memory",
+      "artist_id": "a1",
+      "year": 2024,
+      "size": "100 × 100 cm",
+      "technique": "Oil on canvas",
+      "price": 3600,
+      "category": "painting",
+      "description": "The Daugava river in winter: grey-blue ice fractured by shipping lanes. Krūmiņa paints the river not as landscape but as psychological threshold — the divide between city and country, past and future.",
+      "image_url": "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?w=600&q=80"
+    },
+    {
+      "id": "aw8",
+      "title": "Accumulation II",
+      "artist_id": "a2",
+      "year": 2025,
+      "size": "30 × 30 × 30 cm",
+      "technique": "Reclaimed wood and steel",
+      "price": 2900,
+      "category": "sculpture",
+      "is_sculpture": true,
+      "model_type": "stack",
+      "model_color": "#ffd23f",
+      "description": "Stacked slabs of reclaimed Soviet-era flooring, held in a barely perceptible tension by thin steel rods. The work explores how history is compressed, layered, and preserved in material objects.",
+      "image_url": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80"
+    },
+    {
+      "id": "aw9",
+      "title": "Jurmala, Blue Hour",
+      "artist_id": "a3",
+      "year": 2024,
+      "size": "60 × 90 cm",
+      "technique": "Analog C-print, edition 2/5",
+      "price": 1600,
+      "category": "photography",
+      "description": "The famous resort town captured in the narrow window between sunset and darkness, when Baltic blue fills the sky. The empty wooden beach houses take on a dreamlike, melancholic quality.",
+      "image_url": "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=600&q=80"
+    },
+    {
+      "id": "aw10",
+      "title": "Threshold Study",
+      "artist_id": "a4",
+      "year": 2025,
+      "size": "40 × 60 cm",
+      "technique": "Ink on paper",
+      "price": 780,
+      "category": "drawing",
+      "description": "Doorways drawn from memory rather than observation — the result is a set of architecturally impossible but emotionally precise portals. Bergs treats the doorway as a symbol of transition and hesitation.",
+      "image_url": "https://images.unsplash.com/photo-1579762593175-20226054cad0?w=600&q=80"
+    },
+    {
+      "id": "aw11",
+      "title": "Inheritance",
+      "artist_id": "a5",
+      "year": 2026,
+      "size": "80 × 100 cm",
+      "technique": "Embroidery, oil, and collage on canvas",
+      "price": 4400,
+      "category": "mixed_media",
+      "description": "Three generations of female labor are present in this work: her grandmother's embroidery patterns, her mother's handwritten recipes, and her own painted marks. A conversation across time.",
+      "image_url": "https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?w=600&q=80"
+    },
+    {
+      "id": "aw12",
+      "title": "The Gesture",
+      "artist_id": "a6",
+      "year": 2025,
+      "size": "50 × 70 cm",
+      "technique": "Oil on linen",
+      "price": 3300,
+      "category": "painting",
+      "description": "A single outstretched hand, painted in warm sienna tones against a flat grey background. Vītols studied theatrical gesture for a year before painting this work — the hand feels both universal and deeply personal.",
+      "image_url": "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=600&q=80"
+    },
+    {
+      "id": "aw13",
+      "title": "Trefoil",
+      "artist_id": "a2",
+      "year": 2026,
+      "size": "32 × 32 × 18 cm",
+      "technique": "Painted glazed ceramic",
+      "price": 1450,
+      "category": "ceramic",
+      "model_type": "knot",
+      "model_color": "#ff2d87",
+      "description": "A topological knot rendered in high-gloss magenta glaze — the form has no beginning and no end. Ozols uses the mathematical trefoil as a meditation on continuous surfaces and the impossibility of orientation.",
+      "image_url": "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=600&q=80"
+    },
+    {
+      "id": "aw14",
+      "title": "Quartz Cluster",
+      "artist_id": "a5",
+      "year": 2026,
+      "size": "26 × 24 × 22 cm",
+      "technique": "Hand-built earthenware, cyan underglaze",
+      "price": 890,
+      "category": "ceramic",
+      "model_type": "crystal",
+      "model_color": "#00d4e0",
+      "description": "Angular prisms pushing outward in every direction — a ceramic homage to crystalline growth. The cyan underglaze was applied raw, leaving visible brushwork under the transparent glaze.",
+      "image_url": "https://images.unsplash.com/photo-1578500494198-246f612d3b3d?w=600&q=80"
+    },
+    {
+      "id": "aw15",
+      "title": "Ascension",
+      "artist_id": "a2",
+      "year": 2025,
+      "size": "55 × 28 × 28 cm",
+      "technique": "Painted cast resin and steel",
+      "price": 2600,
+      "category": "sculpture",
+      "is_sculpture": true,
+      "model_type": "helix",
+      "model_color": "#7cfc00",
+      "description": "Sixteen cubes spiralling upward along a helical path, each rotated against the axis of ascent. Painted in electric chartreuse to contrast against the gallery wall — the form demands attention.",
+      "image_url": "https://images.unsplash.com/photo-1612196808214-b40b7b4b7e8f?w=600&q=80"
+    },
+    {
+      "id": "aw16",
+      "title": "Anemone",
+      "artist_id": "a2",
+      "year": 2026,
+      "size": "24 × 24 × 24 cm",
+      "technique": "Painted 3D-printed resin",
+      "price": 1200,
+      "category": "sculpture",
+      "is_sculpture": true,
+      "model_type": "spikes",
+      "model_color": "#ff8a00",
+      "description": "A radial form inspired by deep-sea invertebrates and medieval maces. Fourteen spikes project outward from a faceted core, each pointing in a direction calculated using Fibonacci sphere packing.",
+      "image_url": "https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?w=600&q=80"
+    },
+    {
+      "id": "aw17",
+      "title": "Orbit Study",
+      "artist_id": "a5",
+      "year": 2026,
+      "size": "30 × 45 × 30 cm",
+      "technique": "Painted mixed media",
+      "price": 1750,
+      "category": "sculpture",
+      "is_sculpture": true,
+      "model_type": "orbit",
+      "model_color": "#8a2be2",
+      "description": "A central dodecahedron surrounded by three orbiting octahedra, suspended in space. The piece hangs from a single filament — viewers are invited to walk around it and experience the sculpture from every angle.",
+      "image_url": "https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?w=600&q=80"
+    }
+  ]
+}
