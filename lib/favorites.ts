@@ -1,23 +1,45 @@
 "use client";
 
-const KEY = "rc_favorites";
+import { supabase } from "./supabase";
 
-export function getFavorites(): string[] {
-  if (typeof window === "undefined") return [];
-  try {
-    return JSON.parse(localStorage.getItem(KEY) ?? "[]");
-  } catch {
-    return [];
+// Get or create a session ID (anonymous user tracking)
+function getSessionId(): string {
+  if (typeof window === "undefined") return "";
+  let id = localStorage.getItem("rc_session");
+  if (!id) {
+    id = crypto.randomUUID();
+    localStorage.setItem("rc_session", id);
   }
+  return id;
 }
 
-export function toggleFavorite(id: string): string[] {
-  const current = getFavorites();
-  const next = current.includes(id) ? current.filter((x) => x !== id) : [...current, id];
-  localStorage.setItem(KEY, JSON.stringify(next));
-  return next;
+export async function getFavorites(): Promise<string[]> {
+  const sessionId = getSessionId();
+  if (!sessionId) return [];
+
+  const { data } = await supabase
+    .from("favorites")
+    .select("artwork_id")
+    .eq("session_id", sessionId);
+
+  return data?.map((r) => r.artwork_id) ?? [];
 }
 
-export function isFavorite(id: string): boolean {
-  return getFavorites().includes(id);
+export async function toggleFavorite(artworkId: string): Promise<string[]> {
+  const sessionId = getSessionId();
+  const current = await getFavorites();
+
+  if (current.includes(artworkId)) {
+    await supabase
+      .from("favorites")
+      .delete()
+      .eq("session_id", sessionId)
+      .eq("artwork_id", artworkId);
+  } else {
+    await supabase
+      .from("favorites")
+      .insert({ session_id: sessionId, artwork_id: artworkId });
+  }
+
+  return getFavorites();
 }

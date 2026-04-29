@@ -1,32 +1,63 @@
-import rawData from "@/data/artworks.json";
-import { Artist, Artwork, ArtworkWithArtist } from "./types";
+import { supabase, getImageUrl } from "./supabase";
+import { ArtworkWithArtist } from "./types";
 
-const artists: Artist[] = rawData.artists;
-const artworks: Artwork[] = rawData.artworks as Artwork[];
+export async function getAllArtworks(): Promise<ArtworkWithArtist[]> {
+  const { data, error } = await supabase
+    .from("artworks")
+    .select("*, artist:artists(*)")
+    .order("year", { ascending: false });
 
-export function getAllArtworks(): ArtworkWithArtist[] {
-  return artworks.map((aw) => ({
-    ...aw,
-    artist: artists.find((a) => a.id === aw.artist_id)!,
+  if (error) {
+    console.error("getAllArtworks error:", error.message);
+    return [];
+  }
+
+  return data.map((row) => ({
+    ...row,
+    image_url: getImageUrl(row.image_path),
+    images: [],
   }));
 }
 
-export function getArtworkById(id: string): ArtworkWithArtist | null {
-  const aw = artworks.find((a) => a.id === id);
-  if (!aw) return null;
-  return { ...aw, artist: artists.find((a) => a.id === aw.artist_id)! };
+export async function getArtworkById(id: string): Promise<ArtworkWithArtist | null> {
+  const { data, error } = await supabase
+    .from("artworks")
+    .select("*, artist:artists(*), images:artwork_images(id, path, sort_order)")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error("getArtworkById error:", error.message);
+    return null;
+  }
+
+  const images = (data.images ?? []).sort(
+    (a: { sort_order: number }, b: { sort_order: number }) => a.sort_order - b.sort_order
+  );
+
+  return {
+    ...data,
+    image_url: getImageUrl(data.image_path),
+    images,
+  };
 }
 
-export function getSimilarArtworks(id: string, count = 4): ArtworkWithArtist[] {
-  const target = artworks.find((a) => a.id === id);
-  if (!target) return [];
-  return getAllArtworks()
-    .filter(
-      (a) =>
-        a.id !== id &&
-        (a.category === target.category || a.artist_id === target.artist_id)
-    )
-    .slice(0, count);
-}
+export async function getSimilarArtworks(id: string, count = 4): Promise<ArtworkWithArtist[]> {
+  const artwork = await getArtworkById(id);
+  if (!artwork) return [];
 
-export { artists, artworks };
+  const { data, error } = await supabase
+    .from("artworks")
+    .select("*, artist:artists(*)")
+    .or(`category.eq.${artwork.category},artist_id.eq.${artwork.artist_id}`)
+    .neq("id", id)
+    .limit(count);
+
+  if (error) return [];
+
+  return data.map((row) => ({
+    ...row,
+    image_url: getImageUrl(row.image_path),
+    images: [],
+  }));
+}

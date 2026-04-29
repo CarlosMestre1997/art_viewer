@@ -40,9 +40,23 @@ body {
   animation: spin-slow 2s linear infinite;
 }
 
-/* Smooth image loading */
+/* Smooth image loading — disabled inside 3D-rotating cards to prevent
+   the opacity fade-in firing mid-rotation and causing a white flash. */
 img {
   transition: opacity 0.3s ease;
+}
+.rotate-scene img {
+  transition: none;
+}
+
+/* Hide scrollbar on swipe galleries (detail page image carousel).
+   Keeps scroll functionality but removes the visible scrollbar track. */
+.gallery-scroll {
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE / Edge legacy */
+}
+.gallery-scroll::-webkit-scrollbar {
+  display: none;                /* Chrome / Safari / new Edge */
 }
 
 /* Pencil-drawing treatment for drawing category */

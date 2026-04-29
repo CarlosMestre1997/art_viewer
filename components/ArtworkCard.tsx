@@ -7,10 +7,21 @@ import { Heart, Box } from "lucide-react";
 import { ArtworkWithArtist } from "@/lib/types";
 import { useApp } from "@/lib/AppContext";
 import { t } from "@/lib/i18n";
+import { getImageUrl } from "@/lib/supabase";
+
+// Warm off-white used by both Sculpture3D and GLBViewer — keep in sync.
+const CARD_BG = "#faf7f1";
 
 const Sculpture3D = dynamic(() => import("./Sculpture3D"), {
   ssr: false,
-  loading: () => <div className="w-full h-full bg-stone-100" />,
+  loading: () => <div className="w-full h-full" style={{ background: CARD_BG }} />,
+});
+
+const GLBViewer = dynamic(() => import("./GLBViewer"), {
+  ssr: false,
+  // While the JS chunk + GLB file load, show the primary image so the card
+  // isn't blank on first page visit.
+  loading: () => <div className="w-full h-full" style={{ background: CARD_BG }} />,
 });
 
 interface Props {
@@ -21,12 +32,21 @@ interface Props {
 export default function ArtworkCard({ artwork, priority = false }: Props) {
   const { lang, favorites, toggleFavorite, rotating } = useApp();
   const isFav = favorites.includes(artwork.id);
-  const is3D = !!artwork.model_type;
+  const hasProcedural3D = !!artwork.model_type;
+  const hasUploadedGLB = !!artwork.model_path;
+  const is3D = hasProcedural3D || hasUploadedGLB;
+  const imgFit = artwork.image_fit ?? "cover";
 
   return (
     <div className="relative bg-white rounded-2xl overflow-hidden shadow-sm border border-stone-100 flex flex-col group">
-      <Link href={`/artwork/${artwork.id}`} className={`block aspect-square overflow-hidden bg-stone-100 relative rotate-scene ${artwork.category === "drawing" ? "pencil-filter" : ""}`}>
-        {is3D ? (
+      <Link
+        href={`/artwork/${artwork.id}`}
+        className={`block aspect-square overflow-hidden relative rotate-scene ${
+          !is3D && artwork.category === "drawing" ? "pencil-filter" : ""
+        }`}
+        style={{ background: CARD_BG }}
+      >
+        {hasProcedural3D ? (
           <div className="absolute inset-0">
             <Sculpture3D
               type={artwork.model_type!}
@@ -34,7 +54,33 @@ export default function ArtworkCard({ artwork, priority = false }: Props) {
               spinning={rotating}
             />
           </div>
+        ) : hasUploadedGLB ? (
+          <div className="absolute inset-0">
+            {/*
+              Primary image sits underneath — visible immediately while the GLB
+              JS chunk + network file load. GLBViewer's canvas covers it once
+              ready (its background colour matches, so there's no visible swap).
+            */}
+            {artwork.image_url && artwork.image_url !== "/placeholder.jpg" && (
+              <Image
+                src={artwork.image_url}
+                alt={artwork.title}
+                fill
+                sizes="(max-width: 640px) 50vw, 33vw"
+                className={`${imgFit === "contain" ? "object-contain" : "object-cover"}`}
+                priority={priority}
+              />
+            )}
+            <div className="absolute inset-0">
+              <GLBViewer
+                url={getImageUrl(artwork.model_path!)}
+                spinning={rotating}
+                scale={artwork.model_scale ?? 1}
+              />
+            </div>
+          </div>
         ) : (
+          // Regular image — flips on the Y axis when global "rotating" is on
           <div
             style={{
               position: "relative",
@@ -45,49 +91,35 @@ export default function ArtworkCard({ artwork, priority = false }: Props) {
               willChange: rotating ? "transform" : undefined,
             }}
           >
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                backfaceVisibility: "hidden",
-                WebkitBackfaceVisibility: "hidden",
-              }}
-            >
-              <Image
-                src={artwork.image_url}
-                alt={artwork.title}
-                fill
-                sizes="(max-width: 640px) 50vw, 33vw"
-                className="object-cover"
-                priority={priority}
-                loading={priority ? "eager" : "lazy"}
-              />
-            </div>
-            <div
-              aria-hidden="true"
-              style={{
-                position: "absolute",
-                inset: 0,
-                backfaceVisibility: "hidden",
-                WebkitBackfaceVisibility: "hidden",
-                transform: "rotateY(180deg)",
-              }}
-            >
-              <Image
-                src={artwork.image_url}
-                alt=""
-                fill
-                sizes="(max-width: 640px) 50vw, 33vw"
-                className="object-cover"
-                priority={priority}
-                loading={priority ? "eager" : "lazy"}
-              />
-            </div>
+            {[false, true].map((isBack) => (
+              <div
+                key={isBack ? "back" : "front"}
+                aria-hidden={isBack}
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden",
+                  transform: isBack ? "rotateY(180deg)" : undefined,
+                  background: CARD_BG,
+                }}
+              >
+                <Image
+                  src={artwork.image_url}
+                  alt={isBack ? "" : artwork.title}
+                  fill
+                  sizes="(max-width: 640px) 50vw, 33vw"
+                  className={`${imgFit === "contain" ? "object-contain" : "object-cover"}`}
+                  priority={priority && !isBack}
+                  loading={priority && !isBack ? "eager" : "lazy"}
+                />
+              </div>
+            ))}
           </div>
         )}
 
         {/* Category / 3D pill */}
-        <span className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-stone-700 text-[10px] font-medium px-2 py-0.5 rounded-full capitalize flex items-center gap-1">
+        <span className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-stone-700 text-[10px] font-medium px-2 py-0.5 rounded-full capitalize flex items-center gap-1 z-10">
           {is3D && <Box size={10} />}
           {t(lang, artwork.category as keyof typeof import("@/lib/i18n").translations.en)}
         </span>
@@ -105,15 +137,10 @@ export default function ArtworkCard({ artwork, priority = false }: Props) {
             €{artwork.price.toLocaleString()}
           </span>
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              toggleFavorite(artwork.id);
-            }}
+            onClick={(e) => { e.preventDefault(); toggleFavorite(artwork.id); }}
             aria-label={isFav ? t(lang, "saved") : t(lang, "save")}
             className={`flex items-center justify-center w-8 h-8 rounded-full transition-all ${
-              isFav
-                ? "bg-rose-500 text-white"
-                : "bg-stone-100 text-stone-400 hover:bg-rose-50 hover:text-rose-400"
+              isFav ? "bg-rose-500 text-white" : "bg-stone-100 text-stone-400 hover:bg-rose-50 hover:text-rose-400"
             }`}
           >
             <Heart size={15} fill={isFav ? "currentColor" : "none"} />

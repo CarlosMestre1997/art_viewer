@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import { AppProvider } from "@/lib/AppContext";
-import Navbar from "@/components/Navbar";
+import ConditionalNavbar from "@/components/ConditionalNavbar";
 import OnboardingGate from "@/components/OnboardingGate";
 
 const geist = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -25,7 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-full bg-stone-50 text-stone-900 font-(family-name:--font-geist-sans)">
         <AppProvider>
           <OnboardingGate />
-          <Navbar />
+          <ConditionalNavbar />
           <main className="max-w-2xl mx-auto pb-16">{children}</main>
         </AppProvider>
       </body>

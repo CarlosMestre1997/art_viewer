@@ -29,7 +29,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [userIntent, setUserIntent] = useState("discover");
 
   useEffect(() => {
-    setFavorites(getFavorites());
+    getFavorites().then(setFavorites);
+
     const savedLang = localStorage.getItem("rc_lang") as Language | null;
     if (savedLang) setLangState(savedLang);
     const savedLevel = localStorage.getItem("rc_level") as "beginner" | "advanced" | null;
@@ -46,7 +47,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const toggleFavorite = useCallback((id: string) => {
-    setFavorites(doToggle(id));
+    doToggle(id).then(setFavorites);
   }, []);
 
   const handleSetInfoLevel = useCallback((v: "beginner" | "advanced") => {

@@ -1,17 +1,23 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Heart } from "lucide-react";
 import { getAllArtworks } from "@/lib/data";
 import { useApp } from "@/lib/AppContext";
 import { t } from "@/lib/i18n";
 import ArtworkCard from "@/components/ArtworkCard";
-
-const ALL = getAllArtworks();
+import { ArtworkWithArtist } from "@/lib/types";
 
 export default function FavoritesPage() {
   const { lang, favorites } = useApp();
-  const saved = ALL.filter((a) => favorites.includes(a.id));
+  const [artworks, setArtworks] = useState<ArtworkWithArtist[]>([]);
+
+  useEffect(() => {
+    getAllArtworks().then(setArtworks);
+  }, []);
+
+  const saved = artworks.filter((a) => favorites.includes(a.id));
 
   return (
     <div className="px-4 pt-6">

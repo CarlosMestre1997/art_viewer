@@ -1,12 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { getAllArtworks } from "@/lib/data";
-import { FilterCategory, PriceRange, SortOption } from "@/lib/types";
+import { ArtworkWithArtist, FilterCategory, PriceRange, SortOption } from "@/lib/types";
 import FilterBar from "@/components/FilterBar";
 import ArtworkCard from "@/components/ArtworkCard";
-
-const ALL_ARTWORKS = getAllArtworks();
 
 const PRICE_BOUNDS: Record<PriceRange, [number, number]> = {
   any: [0, Infinity],
@@ -17,13 +15,18 @@ const PRICE_BOUNDS: Record<PriceRange, [number, number]> = {
 };
 
 export default function HomePage() {
+  const [artworks, setArtworks] = useState<ArtworkWithArtist[]>([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<FilterCategory>("all");
   const [sort, setSort] = useState<SortOption>("year_desc");
   const [priceRange, setPriceRange] = useState<PriceRange>("any");
 
+  useEffect(() => {
+    getAllArtworks().then(setArtworks);
+  }, []);
+
   const filtered = useMemo(() => {
-    let list = ALL_ARTWORKS;
+    let list = artworks;
 
     if (category !== "all") {
       list = list.filter((a) => a.category === category);
@@ -51,7 +54,7 @@ export default function HomePage() {
       if (sort === "artist_az") return a.artist.name.localeCompare(b.artist.name);
       return 0;
     });
-  }, [search, category, sort, priceRange]);
+  }, [artworks, search, category, sort, priceRange]);
 
   return (
     <>
@@ -65,11 +68,15 @@ export default function HomePage() {
         priceRange={priceRange}
         onPriceRange={setPriceRange}
         count={filtered.length}
-        total={ALL_ARTWORKS.length}
+        total={artworks.length}
       />
 
       <div className="px-4 pt-4">
-        {filtered.length === 0 ? (
+        {artworks.length === 0 ? (
+          <div className="text-center py-20 text-stone-400 text-sm">
+            Loading artworks...
+          </div>
+        ) : filtered.length === 0 ? (
           <div className="text-center py-20 text-stone-400 text-sm">
             No artworks match your search.
           </div>

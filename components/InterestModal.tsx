@@ -4,6 +4,9 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import { useApp } from "@/lib/AppContext";
 import { t } from "@/lib/i18n";
+import { supabase } from "@/lib/supabase";
+
+
 
 interface Props {
   artworkId: string;
@@ -18,13 +21,18 @@ export default function InterestModal({ artworkId, artworkTitle, onClose }: Prop
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState(false);
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    const interests = JSON.parse(localStorage.getItem("rc_interests") ?? "[]");
-    interests.push({ artworkId, artworkTitle, name, email, message, ts: Date.now() });
-    localStorage.setItem("rc_interests", JSON.stringify(interests));
-    setSent(true);
-  }
+  async function handleSubmit(e: React.FormEvent) {
+  e.preventDefault();
+  
+  const { error } = await supabase.from("interests").insert({
+    artwork_id: artworkId,
+    name: name || null,
+    email,
+    message: message || null,
+  });
+
+  if (!error) setSent(true);
+}
 
   return (
     <div
