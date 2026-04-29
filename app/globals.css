@@ -62,7 +62,7 @@ img {
 /* Pencil-drawing treatment for drawing category */
 .pencil-filter {
   filter: grayscale(1) contrast(1.35) brightness(1.05);
-  background: #f4ede0;
+  background: #faf7f1;
 }
 .pencil-filter img {
   mix-blend-mode: multiply;
