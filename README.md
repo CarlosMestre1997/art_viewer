@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Riga Contemporary Art Viewer
+
+A mobile-first web application for browsing and exploring artworks at the Riga Contemporary 2026 art fair. Features bilingual support (English/Latvian), 3D sculpture visualization, and a favorites system.
+
+## Tech Stack
+
+- **Framework**: Next.js 16 with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS 4
+- **Database & Storage**: Supabase (PostgreSQL + file storage)
+- **3D Rendering**: Three.js via @react-three/fiber
+- **Icons**: Lucide React
+- **React**: v19 with React Compiler (babel-plugin-react-compiler)
+
+## Project Structure
+
+```
+app/
+├── page.tsx              # Home - artwork grid with filters
+├── artwork/[id]/page.tsx # Artwork detail with gallery & 3D viewer
+├── favorites/page.tsx    # User's saved artworks
+├── admin/page.tsx        # Admin panel
+└── layout.tsx            # Root layout with providers
+
+components/
+├── ArtworkCard.tsx       # Grid card with 3D/image display
+├── FilterBar.tsx         # Search, category, price & sort filters
+├── Sculpture3D.tsx       # Procedural 3D sculpture generator
+├── GLBViewer.tsx         # Uploaded GLB model viewer
+├── InterestModal.tsx     # Contact form for artwork inquiries
+├── Navbar.tsx            # Bottom navigation
+├── Onboarding.tsx        # First-visit welcome flow
+└── OnboardingGate.tsx    # Onboarding state wrapper
+
+lib/
+├── AppContext.tsx        # Global state (language, favorites, info level)
+├── data.ts               # Supabase data fetching
+├── supabase.ts           # Supabase client
+├── supabase-admin.ts     # Admin client for server operations
+├── types.ts              # TypeScript interfaces
+├── i18n.ts               # Translations (EN/LV)
+├── analytics.ts          # View tracking
+└── favorites.ts          # LocalStorage favorites persistence
+```
+
+## Key Features
+
+- **Artwork Categories**: Painting, sculpture, ceramic, photography, mixed media, drawing
+- **3D Models**: Sculptures display as auto-rotating 3D models (procedural or uploaded GLB)
+- **Image Gallery**: Swipeable photo galleries on detail pages
+- **Bilingual**: Full EN/LV language support
+- **Info Levels**: Beginner/Advanced description modes
+- **Favorites**: Locally persisted saved artworks
+- **PWA Ready**: Manifest configured for home screen installation
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Requires environment variables for Supabase connection (see `.env.local.example`).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Database Schema
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `artists` - Artist profiles (name, bio, nationality)
+- `artworks` - Artwork records with pricing, dimensions, 3D model config
+- `artwork_images` - Gallery images per artwork
+- `inquiries` - Contact form submissions
+- `analytics` - View tracking

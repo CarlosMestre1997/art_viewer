@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useApp } from "@/lib/AppContext";
 import { t } from "@/lib/i18n";
 import { FilterCategory, PriceRange, SortOption } from "@/lib/types";
-import { SlidersHorizontal, ChevronDown, RotateCw } from "lucide-react";
+import { SlidersHorizontal, ChevronDown } from "lucide-react";
 
 interface Props {
   search: string;
@@ -24,7 +24,7 @@ const SORTS: SortOption[] = ["price_asc", "price_desc", "year_desc", "artist_az"
 const PRICE_RANGES: PriceRange[] = ["any", "u500", "500_1500", "1500_3000", "o3000"];
 
 export default function FilterBar({ search, onSearch, category, onCategory, sort, onSort, priceRange, onPriceRange, count, total }: Props) {
-  const { lang, rotating, setRotating } = useApp();
+  const { lang } = useApp();
   const [open, setOpen] = useState(false);
 
   return (
@@ -106,19 +106,6 @@ export default function FilterBar({ search, onSearch, category, onCategory, sort
             )}
           </div>
 
-          {/* Rotate button */}
-          <button
-            onClick={() => setRotating(!rotating)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-              rotating
-                ? "bg-stone-900 text-white"
-                : "bg-stone-100 text-stone-700 hover:bg-stone-200"
-            }`}
-            title="Rotate artworks"
-          >
-            <RotateCw size={13} className={rotating ? "animate-spin-slow" : ""} />
-            {t(lang, rotating ? "rotating" : "rotate")}
-          </button>
         </div>
 
         <span className="text-xs text-stone-400 whitespace-nowrap shrink-0">

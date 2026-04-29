@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { Heart, ChevronLeft, Info, RotateCw } from "lucide-react";
+import { Heart, ChevronLeft, Info } from "lucide-react";
 import { getArtworkById, getSimilarArtworks } from "@/lib/data";
 import { getImageUrl } from "@/lib/supabase";
 import { useApp } from "@/lib/AppContext";
@@ -15,14 +15,16 @@ import InterestModal from "@/components/InterestModal";
 import ArtworkCard from "@/components/ArtworkCard";
 import { ArtworkWithArtist } from "@/lib/types";
 
+const DETAIL_BG = "#faf7f1";
+
 const Sculpture3D = dynamic(() => import("@/components/Sculpture3D"), {
   ssr: false,
-  loading: () => <div className="w-full h-full bg-stone-100" />,
+  loading: () => <div className="w-full h-full" style={{ background: DETAIL_BG }} />,
 });
 
 const GLBViewer = dynamic(() => import("@/components/GLBViewer"), {
   ssr: false,
-  loading: () => <div className="w-full h-full bg-stone-100" />,
+  loading: () => <div className="w-full h-full" style={{ background: DETAIL_BG }} />,
 });
 
 interface Props {
@@ -35,8 +37,7 @@ export default function ArtworkDetailPage({ params }: Props) {
   const [similar, setSimilar] = useState<ArtworkWithArtist[]>([]);
   const { lang, favorites, toggleFavorite, infoLevel, setInfoLevel } = useApp();
   const [modalOpen, setModalOpen] = useState(false);
-  const [detailSpin, setDetailSpin] = useState(true);
-  const [activeSlide, setActiveSlide] = useState(0);
+    const [activeSlide, setActiveSlide] = useState(0);
   const galleryRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -108,27 +109,23 @@ export default function ArtworkDetailPage({ params }: Props) {
         >
           {/* Slide 0: 3D model or first photo */}
           {has3D ? (
-            <div className="shrink-0 w-full aspect-square bg-stone-100 overflow-hidden snap-start relative">
+            <div
+              className="shrink-0 w-full aspect-square overflow-hidden snap-start relative"
+              style={{ background: DETAIL_BG }}
+            >
               {hasUploadedModel ? (
                 <GLBViewer
                   url={getImageUrl(artwork.model_path!)}
-                  spinning={detailSpin}
+                  spinning
                   scale={artwork.model_scale ?? 1}
                 />
               ) : (
                 <Sculpture3D
                   type={artwork.model_type!}
                   color={artwork.model_color ?? "#b8a27a"}
-                  spinning={detailSpin}
+                  spinning
                 />
               )}
-              <button
-                onClick={() => setDetailSpin((s) => !s)}
-                className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center shadow-lg hover:bg-white transition-colors"
-                aria-label="Toggle rotation"
-              >
-                <RotateCw size={16} className={detailSpin ? "text-stone-900" : "text-stone-400"} />
-              </button>
               <span className="absolute top-3 left-3 bg-stone-900 text-white text-[10px] font-semibold px-2.5 py-1 rounded-full tracking-widest uppercase">
                 3D
               </span>
@@ -144,9 +141,10 @@ export default function ArtworkDetailPage({ params }: Props) {
           {galleryImages.map((src, i) => (
             <div
               key={i}
-              className={`shrink-0 w-full aspect-square bg-stone-100 overflow-hidden snap-start relative ${
+              className={`shrink-0 w-full aspect-square overflow-hidden snap-start relative ${
                 !has3D && artwork.category === "drawing" ? "pencil-filter" : ""
               }`}
+              style={{ background: DETAIL_BG }}
             >
               <Image
                 src={src}
@@ -161,7 +159,10 @@ export default function ArtworkDetailPage({ params }: Props) {
 
           {/* Fallback if no images at all */}
           {!has3D && !hasGallery && (
-            <div className="shrink-0 w-full aspect-square bg-stone-100 snap-start flex items-center justify-center">
+            <div
+              className="shrink-0 w-full aspect-square snap-start flex items-center justify-center"
+              style={{ background: DETAIL_BG }}
+            >
               <p className="text-stone-400 text-sm">No image</p>
             </div>
           )}

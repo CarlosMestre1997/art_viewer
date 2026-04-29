@@ -30,7 +30,7 @@ interface Props {
 }
 
 export default function ArtworkCard({ artwork, priority = false }: Props) {
-  const { lang, favorites, toggleFavorite, rotating } = useApp();
+  const { lang, favorites, toggleFavorite } = useApp();
   const isFav = favorites.includes(artwork.id);
   const hasProcedural3D = !!artwork.model_type;
   const hasUploadedGLB = !!artwork.model_path;
@@ -51,7 +51,7 @@ export default function ArtworkCard({ artwork, priority = false }: Props) {
             <Sculpture3D
               type={artwork.model_type!}
               color={artwork.model_color ?? "#b8a27a"}
-              spinning={rotating}
+              spinning
             />
           </div>
         ) : hasUploadedGLB ? (
@@ -74,48 +74,20 @@ export default function ArtworkCard({ artwork, priority = false }: Props) {
             <div className="absolute inset-0">
               <GLBViewer
                 url={getImageUrl(artwork.model_path!)}
-                spinning={rotating}
+                spinning
                 scale={artwork.model_scale ?? 1}
               />
             </div>
           </div>
         ) : (
-          // Regular image — flips on the Y axis when global "rotating" is on
-          <div
-            style={{
-              position: "relative",
-              width: "100%",
-              height: "100%",
-              transformStyle: "preserve-3d",
-              animation: rotating ? "rc-spin-y 7.2s linear infinite reverse" : undefined,
-              willChange: rotating ? "transform" : undefined,
-            }}
-          >
-            {[false, true].map((isBack) => (
-              <div
-                key={isBack ? "back" : "front"}
-                aria-hidden={isBack}
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  backfaceVisibility: "hidden",
-                  WebkitBackfaceVisibility: "hidden",
-                  transform: isBack ? "rotateY(180deg)" : undefined,
-                  background: CARD_BG,
-                }}
-              >
-                <Image
-                  src={artwork.image_url}
-                  alt={isBack ? "" : artwork.title}
-                  fill
-                  sizes="(max-width: 640px) 50vw, 33vw"
-                  className={`${imgFit === "contain" ? "object-contain" : "object-cover"}`}
-                  priority={priority && !isBack}
-                  loading={priority && !isBack ? "eager" : "lazy"}
-                />
-              </div>
-            ))}
-          </div>
+          <Image
+            src={artwork.image_url}
+            alt={artwork.title}
+            fill
+            sizes="(max-width: 640px) 50vw, 33vw"
+            className={imgFit === "contain" ? "object-contain" : "object-cover"}
+            priority={priority}
+          />
         )}
 
         {/* Category / 3D pill */}
