@@ -60,12 +60,56 @@ npm install
 npm run dev
 ```
 
-Requires environment variables for Supabase connection (see `.env.local.example`).
+
+## Database Setup
+
+### 1. Create Supabase Project
+
+Create a new project at [supabase.com](https://supabase.com) and note your project URL and anon key.
+
+### 2. Run Migrations
+
+Execute the SQL migrations in order via the Supabase SQL Editor:
+
+```
+migrations/001_schema.sql        # Core tables (artists, artworks, favorites, interests, artwork_views, admin_users)
+migrations/002_rls_policies.sql  # Row-level security policies
+migrations/003_seed_admin.sql    # Initial admin user
+migrations/004_admin_auth_policy.sql
+migrations/005_storage_and_multi_image.sql  # Storage policies + artwork_images table
+migrations/006_model_scale.sql   # GLB model scale column
+migrations/007_image_fit.sql     # Image fit mode column
+```
+
+### 3. Create Storage Bucket
+
+1. Go to **Storage** in Supabase Dashboard
+2. Create a new bucket named `artworks`
+3. Set bucket to **Public**
+4. Click **Edit bucket** and configure **Allowed MIME types**:
+
+```
+image/jpeg, image/png, image/webp, model/gltf-binary, application/octet-stream
+```
+
+The `application/octet-stream` type is required because Supabase server-side MIME detection classifies `.glb` files as `application/octet-stream` regardless of the Content-Type header sent by the client.
+
+### 4. Environment Variables
+
+Create `.env.local` with:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+```
 
 ## Database Schema
 
 - `artists` - Artist profiles (name, bio, nationality)
 - `artworks` - Artwork records with pricing, dimensions, 3D model config
 - `artwork_images` - Gallery images per artwork
-- `inquiries` - Contact form submissions
-- `analytics` - View tracking
+- `interests` - Contact form submissions
+- `artwork_views` - View tracking analytics
+- `favorites` - Session-based saved artworks
+- `admin_users` - Admin access allowlist
