@@ -43,21 +43,22 @@ function Scene({ type, color, spinning }: Props) {
 
       case "crystal": {
         // Cluster of asymmetric prisms pointing different ways
-        const shards = [
+        type Vec3 = [number, number, number];
+        const shards: Array<{ pos: Vec3; rot: Vec3; scale: Vec3 }> = [
           { pos: [0, 0, 0], rot: [0, 0, 0], scale: [1, 1.4, 1] },
           { pos: [0.55, 0.15, 0.1], rot: [0.3, 0.8, 0.4], scale: [0.55, 0.9, 0.55] },
           { pos: [-0.5, -0.05, 0.3], rot: [-0.4, -0.6, 0.2], scale: [0.5, 1.1, 0.5] },
           { pos: [0.1, 0.25, -0.55], rot: [0.1, 1.4, -0.3], scale: [0.4, 0.75, 0.4] },
           { pos: [-0.25, -0.3, -0.35], rot: [-0.2, 0.5, 0.7], scale: [0.45, 0.85, 0.45] },
-        ] as const;
+        ];
         return (
           <group>
             {shards.map((s, i) => (
               <mesh
                 key={i}
-                position={s.pos as unknown as [number, number, number]}
-                rotation={s.rot as unknown as [number, number, number]}
-                scale={s.scale as unknown as [number, number, number]}
+                position={s.pos}
+                rotation={s.rot}
+                scale={s.scale}
               >
                 <coneGeometry args={[0.4, 1.4, 5]} />
                 {mat}

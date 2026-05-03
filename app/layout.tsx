@@ -4,6 +4,7 @@ import "./globals.css";
 import { AppProvider } from "@/lib/AppContext";
 import ConditionalNavbar from "@/components/ConditionalNavbar";
 import OnboardingGate from "@/components/OnboardingGate";
+import AppErrorBoundary from "@/components/AppErrorBoundary";
 
 const geist = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 
@@ -24,9 +25,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${geist.variable} h-full antialiased`}>
       <body className="min-h-full bg-stone-50 text-stone-900 font-(family-name:--font-geist-sans)">
         <AppProvider>
-          <OnboardingGate />
-          <ConditionalNavbar />
-          <main className="max-w-2xl mx-auto pb-16">{children}</main>
+          <AppErrorBoundary>
+            <OnboardingGate />
+            <ConditionalNavbar />
+            <main className="max-w-2xl mx-auto pb-16">{children}</main>
+          </AppErrorBoundary>
         </AppProvider>
       </body>
     </html>

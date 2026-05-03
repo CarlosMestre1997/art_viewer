@@ -6,15 +6,10 @@ import {
   BarChart3, Eye, Heart, Mail, RefreshCw, Globe, Upload,
 } from "lucide-react";
 import dynamic from "next/dynamic";
-import { createClient } from "@supabase/supabase-js";
 import { useApp } from "@/lib/AppContext";
+import { supabase } from "@/lib/supabase";
 
 const GLBPreview = dynamic(() => import("@/components/GLBViewer"), { ssr: false });
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
-);
 
 function resolveUrl(path: string | undefined): string {
   if (!path) return "";
@@ -566,10 +561,12 @@ export default function AdminPage() {
                         <p className="text-xs text-stone-400">{aw.year} · €{aw.price?.toLocaleString()}</p>
                         <div className="flex gap-3 mt-2">
                           <button onClick={() => openArtworkForm(aw)}
+                            aria-label={`Edit ${aw.title}`}
                             className="flex items-center gap-1 text-xs text-stone-500 hover:text-stone-900">
                             <Edit2 size={12} /> Edit
                           </button>
                           <button onClick={() => deleteArtwork(aw.id)}
+                            aria-label={`Delete ${aw.title}`}
                             className="flex items-center gap-1 text-xs text-red-500 hover:text-red-700">
                             <Trash2 size={12} /> Delete
                           </button>
@@ -592,7 +589,7 @@ export default function AdminPage() {
                     <h3 className="font-semibold text-stone-900">
                       {editingArtwork ? "Edit Artwork" : "New Artwork"}
                     </h3>
-                    <button type="button" onClick={closeArtworkForm}>
+                    <button type="button" onClick={closeArtworkForm} aria-label="Close artwork form">
                       <X size={20} className="text-stone-400 hover:text-stone-600" />
                     </button>
                   </div>
@@ -870,8 +867,10 @@ export default function AdminPage() {
                     </div>
                     <div className="flex gap-3">
                       <button onClick={() => { setEditingArtist(artist); setShowArtistForm(true); }}
+                        aria-label={`Edit ${artist.name}`}
                         className="text-stone-400 hover:text-stone-600"><Edit2 size={16} /></button>
                       <button onClick={() => deleteArtist(artist.id)}
+                        aria-label={`Delete ${artist.name}`}
                         className="text-stone-400 hover:text-red-500"><Trash2 size={16} /></button>
                     </div>
                   </div>
@@ -886,7 +885,7 @@ export default function AdminPage() {
                     <h3 className="font-semibold text-stone-900">
                       {editingArtist ? "Edit Artist" : "New Artist"}
                     </h3>
-                    <button type="button" onClick={() => { setShowArtistForm(false); setEditingArtist(null); }}>
+                    <button type="button" onClick={() => { setShowArtistForm(false); setEditingArtist(null); }} aria-label="Close artist form">
                       <X size={20} className="text-stone-400 hover:text-stone-600" />
                     </button>
                   </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
@@ -29,7 +30,7 @@ interface Props {
   priority?: boolean;
 }
 
-export default function ArtworkCard({ artwork, priority = false }: Props) {
+function ArtworkCard({ artwork, priority = false }: Props) {
   const { lang, favorites, toggleFavorite } = useApp();
   const isFav = favorites.includes(artwork.id);
   const hasProcedural3D = !!artwork.model_type;
@@ -122,3 +123,5 @@ export default function ArtworkCard({ artwork, priority = false }: Props) {
     </div>
   );
 }
+
+export default memo(ArtworkCard);

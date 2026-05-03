@@ -64,6 +64,10 @@ const translations = {
     artworks: "artworks",
     showing: "Showing",
     of: "of",
+    error_loading: "Failed to load artworks. Please try again.",
+    error_sending: "Failed to send. Please try again.",
+    try_again: "Try Again",
+    retry: "Retry",
   },
   lv: {
     appName: "Rīga Contemporary",
@@ -128,6 +132,10 @@ const translations = {
     artworks: "darbi",
     showing: "Rāda",
     of: "no",
+    error_loading: "Neizdevās ielādēt darbus. Lūdzu, mēģiniet vēlreiz.",
+    error_sending: "Neizdevās nosūtīt. Lūdzu, mēģiniet vēlreiz.",
+    try_again: "Mēģināt vēlreiz",
+    retry: "Atkārtot",
   },
 } as const;
 

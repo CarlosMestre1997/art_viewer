@@ -12,10 +12,25 @@ import { ArtworkWithArtist } from "@/lib/types";
 export default function FavoritesPage() {
   const { lang, favorites } = useApp();
   const [artworks, setArtworks] = useState<ArtworkWithArtist[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    getAllArtworks().then(setArtworks);
+    loadArtworks();
   }, []);
+
+  async function loadArtworks() {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await getAllArtworks();
+      setArtworks(data);
+    } catch {
+      setError(t(lang, "error_loading"));
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const saved = artworks.filter((a) => favorites.includes(a.id));
 
@@ -26,7 +41,19 @@ export default function FavoritesPage() {
         {t(lang, "favorites")}
       </h1>
 
-      {saved.length === 0 ? (
+      {error ? (
+        <div className="text-center py-20">
+          <p className="text-red-500 text-sm mb-4">{error}</p>
+          <button
+            onClick={loadArtworks}
+            className="px-4 py-2 bg-stone-900 text-white rounded-xl text-sm font-medium"
+          >
+            {t(lang, "retry")}
+          </button>
+        </div>
+      ) : loading ? (
+        <div className="text-center py-20 text-stone-400 text-sm">Loading...</div>
+      ) : saved.length === 0 ? (
         <div className="text-center py-20">
           <Heart size={40} className="text-stone-200 mx-auto mb-4" />
           <p className="text-stone-500 font-medium">{t(lang, "no_favorites")}</p>

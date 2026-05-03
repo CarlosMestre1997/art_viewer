@@ -41,13 +41,17 @@ export default function ArtworkDetailPage({ params }: Props) {
   const galleryRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    getArtworkById(id).then((data) => {
-      setArtwork(data);
-      if (data) {
-        trackView(id);
-        getSimilarArtworks(id).then(setSimilar);
-      }
-    });
+    getArtworkById(id)
+      .then((data) => {
+        setArtwork(data);
+        if (data) {
+          trackView(id);
+          getSimilarArtworks(id, data.category, data.artist_id).then(setSimilar);
+        }
+      })
+      .catch(() => {
+        setArtwork(null);
+      });
   }, [id]);
 
   if (artwork === undefined) {

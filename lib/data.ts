@@ -42,14 +42,16 @@ export async function getArtworkById(id: string): Promise<ArtworkWithArtist | nu
   };
 }
 
-export async function getSimilarArtworks(id: string, count = 4): Promise<ArtworkWithArtist[]> {
-  const artwork = await getArtworkById(id);
-  if (!artwork) return [];
-
+export async function getSimilarArtworks(
+  id: string,
+  category: string,
+  artistId: string,
+  count = 4
+): Promise<ArtworkWithArtist[]> {
   const { data, error } = await supabase
     .from("artworks")
     .select("*, artist:artists(*)")
-    .or(`category.eq.${artwork.category},artist_id.eq.${artwork.artist_id}`)
+    .or(`category.eq.${category},artist_id.eq.${artistId}`)
     .neq("id", id)
     .limit(count);
 

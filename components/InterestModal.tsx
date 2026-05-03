@@ -20,19 +20,33 @@ export default function InterestModal({ artworkId, artworkTitle, onClose }: Prop
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
-  e.preventDefault();
-  
-  const { error } = await supabase.from("interests").insert({
-    artwork_id: artworkId,
-    name: name || null,
-    email,
-    message: message || null,
-  });
+    e.preventDefault();
+    setError(null);
+    setSubmitting(true);
 
-  if (!error) setSent(true);
-}
+    try {
+      const { error: insertError } = await supabase.from("interests").insert({
+        artwork_id: artworkId,
+        name: name || null,
+        email,
+        message: message || null,
+      });
+
+      if (insertError) {
+        setError(t(lang, "error_sending"));
+      } else {
+        setSent(true);
+      }
+    } catch {
+      setError(t(lang, "error_sending"));
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   return (
     <div
@@ -43,6 +57,7 @@ export default function InterestModal({ artworkId, artworkTitle, onClose }: Prop
       <div className="relative bg-white rounded-t-3xl sm:rounded-3xl w-full sm:max-w-md p-6 shadow-2xl z-10">
         <button
           onClick={onClose}
+          aria-label="Close modal"
           className="absolute top-4 right-4 text-stone-400 hover:text-stone-700"
         >
           <X size={20} />
@@ -52,6 +67,17 @@ export default function InterestModal({ artworkId, artworkTitle, onClose }: Prop
           <div className="text-center py-6">
             <div className="text-4xl mb-3">✓</div>
             <p className="font-semibold text-stone-900">{t(lang, "sent")}</p>
+          </div>
+        ) : error ? (
+          <div className="text-center py-6">
+            <div className="text-4xl mb-3">!</div>
+            <p className="font-semibold text-red-600">{error}</p>
+            <button
+              onClick={() => setError(null)}
+              className="mt-4 px-4 py-2 bg-stone-900 text-white rounded-xl text-sm font-medium"
+            >
+              {t(lang, "try_again")}
+            </button>
           </div>
         ) : (
           <>
@@ -85,9 +111,10 @@ export default function InterestModal({ artworkId, artworkTitle, onClose }: Prop
               />
               <button
                 type="submit"
-                className="w-full bg-stone-900 text-white font-semibold py-3.5 rounded-xl hover:bg-stone-700 transition-colors"
+                disabled={submitting}
+                className="w-full bg-stone-900 text-white font-semibold py-3.5 rounded-xl hover:bg-stone-700 transition-colors disabled:opacity-50"
               >
-                {t(lang, "send")}
+                {submitting ? "..." : t(lang, "send")}
               </button>
             </form>
           </>

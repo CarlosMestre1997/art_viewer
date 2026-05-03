@@ -23,14 +23,16 @@ app/
 └── layout.tsx            # Root layout with providers
 
 components/
-├── ArtworkCard.tsx       # Grid card with 3D/image display
+├── ArtworkCard.tsx       # Grid card with 3D/image display (memoized)
 ├── FilterBar.tsx         # Search, category, price & sort filters
 ├── Sculpture3D.tsx       # Procedural 3D sculpture generator
 ├── GLBViewer.tsx         # Uploaded GLB model viewer
 ├── InterestModal.tsx     # Contact form for artwork inquiries
 ├── Navbar.tsx            # Bottom navigation
 ├── Onboarding.tsx        # First-visit welcome flow
-└── OnboardingGate.tsx    # Onboarding state wrapper
+├── OnboardingGate.tsx    # Onboarding state wrapper
+├── ErrorBoundary.tsx     # React error boundary for runtime errors
+└── AppErrorBoundary.tsx  # App-level error boundary wrapper
 
 lib/
 ├── AppContext.tsx        # Global state (language, favorites, info level)
@@ -50,8 +52,10 @@ lib/
 - **Image Gallery**: Swipeable photo galleries on detail pages
 - **Bilingual**: Full EN/LV language support
 - **Info Levels**: Beginner/Advanced description modes
-- **Favorites**: Locally persisted saved artworks
+- **Favorites**: Locally persisted saved artworks (session-scoped via RLS)
 - **PWA Ready**: Manifest configured for home screen installation
+- **Error Handling**: Global error boundary with graceful fallbacks and retry actions
+- **Accessibility**: ARIA labels on interactive elements
 
 ## Getting Started
 
@@ -79,6 +83,7 @@ migrations/004_admin_auth_policy.sql
 migrations/005_storage_and_multi_image.sql  # Storage policies + artwork_images table
 migrations/006_model_scale.sql   # GLB model scale column
 migrations/007_image_fit.sql     # Image fit mode column
+migrations/008_fix_favorites_rls.sql  # Session-scoped favorites access
 ```
 
 ### 3. Create Storage Bucket
@@ -113,3 +118,11 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 - `artwork_views` - View tracking analytics
 - `favorites` - Session-based saved artworks
 - `admin_users` - Admin access allowlist
+
+## Architecture Notes
+
+- **Error Boundaries**: App wrapped in `ErrorBoundary` to catch runtime errors gracefully
+- **Memoization**: `ArtworkCard` uses `React.memo` to prevent unnecessary re-renders in grid views
+- **Data Fetching**: All pages include loading and error states with retry functionality
+- **Type Safety**: Strict TypeScript with properly typed Three.js vectors (no unsafe type assertions)
+- **RLS Security**: Favorites are session-scoped; users can only read/delete their own favorites
